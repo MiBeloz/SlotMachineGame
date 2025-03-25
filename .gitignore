@@ -8,5 +8,7 @@
 !*.png
 !*.ttf
 !*.md
+!*.zip
 !/resources/
+!/bin/
 
