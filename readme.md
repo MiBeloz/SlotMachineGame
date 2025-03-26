@@ -21,9 +21,11 @@ cmake -B build
 
 cmake --build build
 
-## Download
+Проверено на Windows10-x64 и Ubuntu-22.04
 
+## Бинарники
 
+В папке "bin" архивы с бинарниками для Windows10-x64 и для Ubuntu-22.04
 
 ## Автор
 Михаил Белозеров

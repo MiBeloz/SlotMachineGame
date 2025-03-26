@@ -1,3 +1,5 @@
+#include <utility>
+
 #include "finishstate.h"
 
 
@@ -13,8 +15,8 @@ FinishState::FinishState(
 
 void FinishState::enter() {
     std::thread t([this](){
-        for (size_t i = 0; i < m_reels.size(); ++i) {
-            while (m_reels[i].isSpining()) {
+        for (const auto& reel : std::as_const(m_reels)) {
+            while (reel.isSpining()) {
                 continue;
             }
         }
@@ -25,8 +27,8 @@ void FinishState::enter() {
 
 void FinishState::update() {
     std::vector<size_t> res;
-    for (size_t i = 0; i < m_reels.size(); ++i) {
-        res.push_back(m_reels[i].getSymbolId());
+    for (const auto& reel : std::as_const(m_reels)) {
+        res.push_back(reel.getSymbolId());
     }
 
     std::vector<size_t> symbolsCount(res.size());
@@ -40,18 +42,18 @@ void FinishState::update() {
 
     bool win = false;
     int points = 0;
-    for (size_t i = 0; i < symbolsCount.size(); ++i) {
-        if (symbolsCount[i] == 5) {
+    for (const auto& symbolCount : std::as_const(symbolsCount)) {
+        if (symbolCount == 5) {
             win = true;
             points = 800;
             break;
         }
-        else if (symbolsCount[i] == 4) {
+        else if (symbolCount == 4) {
             win = true;
             points = 500;
             break;
         }
-        else if (symbolsCount[i] == 3) {
+        else if (symbolCount == 3) {
             win = true;
             points = 300;
             break;

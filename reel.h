@@ -43,6 +43,8 @@ private:
     float m_centerY;
 
     size_t m_symbolId;
+
+    void transparencyControl(Symbol& symbol);
 };
 
 #endif // REEL_H

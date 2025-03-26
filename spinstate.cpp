@@ -17,8 +17,8 @@ void SpinState::enter() {
     m_buttons[Buttons::stop].setEnabled(true);
     stop_flag = false;
 
-    for (size_t i = 0; i < m_reels.size(); ++i) {
-        m_reels[i].spin(getRandomNumber(1500, 2500));
+    for (auto& reel : m_reels) {
+        reel.spin(getRandomNumber(1500, 2500));
     }
 
     m_clock.restart().asSeconds();

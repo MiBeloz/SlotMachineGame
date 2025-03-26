@@ -1,4 +1,5 @@
 #include <limits>
+#include <utility>
 
 #include "reel.h"
 
@@ -22,12 +23,7 @@ Reel::Reel(std::vector<Symbol>& symbols, const sf::Vector2f& position) :
     }
 
     for (auto& symbol : m_symbols) {
-        float spriteCenterY = symbol.getSprite().getPosition().y + symbol.getSprite().getGlobalBounds().height / 2.0f;
-        float distanceToCenter = std::abs(spriteCenterY - m_centerY);
-
-        float alpha = 255.0f * (1.0f - distanceToCenter / (m_symbols[0].getSprite().getGlobalBounds().height * 1.5f));
-        alpha = std::clamp(alpha, 0.0f, 255.0f);
-        symbol.getSprite().setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
+        transparencyControl(symbol);
     }
 }
 
@@ -109,19 +105,14 @@ void Reel::update(float deltaTime) {
         for (auto& symbol : m_symbols) {
             symbol.getSprite().move(0, m_speed * deltaTime);
 
-            float spriteCenterY = symbol.getSprite().getPosition().y + symbol.getSprite().getGlobalBounds().height / 2.0f;
-            float distanceToCenter = std::abs(spriteCenterY - m_centerY);
-
-            float alpha = 255.0f * (1.0f - distanceToCenter / (m_symbols[0].getSprite().getGlobalBounds().height * 1.5f));
-            alpha = std::clamp(alpha, 0.0f, 255.0f);
-            symbol.getSprite().setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
+            transparencyControl(symbol);
         }
     }
 }
 
 void Reel::draw(sf::RenderWindow& window) const {
-    for (size_t i = 0; i < m_symbols.size(); ++i) {
-        window.draw(m_symbols[i].getSprite());
+    for (const auto& symbol : std::as_const(m_symbols)) {
+        window.draw(symbol.getSprite());
     }
 }
 
@@ -130,5 +121,14 @@ bool Reel::isSpining() const {
 }
 
 size_t Reel::getSymbolId() const {
-    return m_symbols[0].getId();;
+    return m_symbolId;
+}
+
+void Reel::transparencyControl(Symbol &symbol) {
+    float spriteCenterY = symbol.getSprite().getPosition().y + symbol.getSprite().getGlobalBounds().height / 2.0f;
+    float distanceToCenter = std::abs(spriteCenterY - m_centerY);
+
+    float alpha = 255.0f * (1.0f - distanceToCenter / (m_symbols[0].getSprite().getGlobalBounds().height * 1.5f));
+    alpha = std::clamp(alpha, 0.0f, 255.0f);
+    symbol.getSprite().setColor(sf::Color(255, 255, 255, static_cast<sf::Uint8>(alpha)));
 }
