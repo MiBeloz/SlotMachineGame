@@ -12,9 +12,11 @@ void ScoreLabel::draw(sf::RenderWindow &window) const {
 }
 
 void ScoreLabel::addPoints(size_t points) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_score += points;
 }
 
 void ScoreLabel::reset() {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_score = 0;
 }

@@ -24,9 +24,9 @@ public:
 private:
     sf::RenderWindow m_window;
     sf::Sprite m_background;
-    std::vector<Button> m_buttons;
-    std::vector<Reel> m_reels;
-    std::vector<Label> m_labels;
+    std::vector<std::unique_ptr<Button>> m_buttons;
+    std::vector<std::unique_ptr<Reel>> m_reels;
+    std::vector<std::unique_ptr<Label>> m_labels;
     std::unique_ptr<ScoreLabel> m_scoreLabel;
     std::vector<std::unique_ptr<AbstractState>> m_states;
     size_t m_currentStateIndex;

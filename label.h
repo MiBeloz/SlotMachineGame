@@ -2,6 +2,7 @@
 #define LABEL_H
 
 #include <SFML/Graphics.hpp>
+#include <mutex>
 
 
 class Label {
@@ -10,10 +11,10 @@ public:
 
     virtual ~Label() {}
 
-    Label(const Label&) = default;
-    Label(Label&&) noexcept = default;
-    Label& operator=(const Label&) = default;
-    Label& operator=(Label&&) noexcept = default;
+    Label(const Label&) = delete;
+    Label(Label&&) noexcept = delete;
+    Label& operator=(const Label&) = delete;
+    Label& operator=(Label&&) noexcept = delete;
 
     virtual void draw(sf::RenderWindow& window) const;
 
@@ -23,6 +24,7 @@ public:
 
 protected:
     sf::Text m_text;
+    std::mutex m_mutex;
 };
 
 #endif // LABEL_H

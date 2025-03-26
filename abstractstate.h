@@ -23,10 +23,10 @@ enum Labels {
 class AbstractState {
 public:
     explicit AbstractState(
-        std::vector<Button>& buttons,
-        std::vector<Reel>& reels,
-        std::vector<Label>& labels,
-        ScoreLabel& scoreLabel,
+        std::vector<std::unique_ptr<Button>>& buttons,
+        std::vector<std::unique_ptr<Reel>>& reels,
+        std::vector<std::unique_ptr<Label>>& labels,
+        std::unique_ptr<ScoreLabel>& scoreLabel,
         const std::function<void()>& nextStateFunction)
         :
         m_buttons(buttons),
@@ -49,10 +49,10 @@ public:
     virtual void handleEvent(const sf::Event& event, const sf::RenderWindow& window) = 0;
 
 protected:
-    std::vector<Button>& m_buttons;
-    std::vector<Reel>& m_reels;
-    std::vector<Label>& m_labels;
-    ScoreLabel& m_scoreLabel;
+    std::vector<std::unique_ptr<Button>>& m_buttons;
+    std::vector<std::unique_ptr<Reel>>& m_reels;
+    std::vector<std::unique_ptr<Label>>& m_labels;
+    std::unique_ptr<ScoreLabel>& m_scoreLabel;
     std::function<void()> m_nextStateFunction;
 };
 

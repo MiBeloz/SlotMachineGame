@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <SFML/Graphics.hpp>
+#include <mutex>
 
 
 class Button {
@@ -12,13 +13,12 @@ public:
                     const sf::Vector2f& position,
                     const sf::Vector2f& size = sf::Vector2f(150, 50));
 
-    Button(const Button& other) = default;
+    virtual ~Button() {}
 
-    Button(Button&& other) noexcept;
-
-    Button& operator=(const Button& other) = default;
-
-    Button& operator=(Button&& other) noexcept;
+    Button(const Button& other) = delete;
+    Button(Button&& other) noexcept = delete;
+    Button& operator=(const Button& other) = delete;
+    Button& operator=(Button&& other) noexcept = delete;
 
     void setPosition(const sf::Vector2f& position);
 
@@ -41,6 +41,8 @@ private:
     sf::Text m_label;
     bool m_isClicked;
     bool m_enabled;
+
+    std::mutex m_mutex;
 
     static inline const sf::Color LightGray = sf::Color(225, 225, 225);
     static inline const sf::Color DarkGray = sf::Color(120, 120, 120);

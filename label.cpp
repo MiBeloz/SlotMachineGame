@@ -13,9 +13,11 @@ void Label::draw(sf::RenderWindow& window) const {
 }
 
 void Label::setText(const std::string& text) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_text.setString(text);
 }
 
 void Label::clear() {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_text.setString("");
 }

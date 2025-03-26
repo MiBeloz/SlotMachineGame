@@ -2,10 +2,10 @@
 
 
 SpinState::SpinState(
-    std::vector<Button>& buttons,
-    std::vector<Reel>& reels,
-    std::vector<Label>& labels,
-    ScoreLabel& scoreLabel,
+    std::vector<std::unique_ptr<Button>>& buttons,
+    std::vector<std::unique_ptr<Reel>>& reels,
+    std::vector<std::unique_ptr<Label>>& labels,
+    std::unique_ptr<ScoreLabel>& scoreLabel,
     const std::function<void()>& nextStateFunction)
     :
     AbstractState(buttons, reels, labels, scoreLabel, nextStateFunction),
@@ -13,12 +13,12 @@ SpinState::SpinState(
 {}
 
 void SpinState::enter() {
-    m_buttons[Buttons::start].setEnabled(false);
-    m_buttons[Buttons::stop].setEnabled(true);
+    m_buttons[Buttons::start]->setEnabled(false);
+    m_buttons[Buttons::stop]->setEnabled(true);
     stop_flag = false;
 
     for (auto& reel : m_reels) {
-        reel.spin(getRandomNumber(1500, 2500));
+        reel->spin(getRandomNumber(1500, 2500));
     }
 
     m_clock.restart().asSeconds();
@@ -30,18 +30,18 @@ void SpinState::enter() {
                 break;
             }
 
-            m_labels[Labels::statusBar].setText("Autostop in " + std::to_string(SECONDS_TO_STOP - elapsedSeconds) + " seconds");
+            m_labels[Labels::statusBar]->setText("Autostop in " + std::to_string(SECONDS_TO_STOP - elapsedSeconds) + " seconds");
         }
     });
     t.detach();
 }
 
 void SpinState::update() {
-    m_buttons[Buttons::start].setEnabled(false);
-    m_buttons[Buttons::stop].setEnabled(false);
+    m_buttons[Buttons::start]->setEnabled(false);
+    m_buttons[Buttons::stop]->setEnabled(false);
     stop_flag = true;
     for (size_t i = 0; i < m_reels.size(); ++i) {
-        m_reels[i].stop(1.0f * (i + 1));
+        m_reels[i]->stop(1.0f * (i + 1));
     }
 
     if (m_nextStateFunction) {
@@ -50,15 +50,15 @@ void SpinState::update() {
 }
 
 void SpinState::end() {
-    m_buttons[Buttons::start].reset();
-    m_buttons[Buttons::stop].reset();
-    m_labels[Labels::win_loss].clear();
-    m_labels[Labels::statusBar].clear();
+    m_buttons[Buttons::start]->reset();
+    m_buttons[Buttons::stop]->reset();
+    m_labels[Labels::win_loss]->clear();
+    m_labels[Labels::statusBar]->clear();
 }
 
 void SpinState::handleEvent(const sf::Event& event, const sf::RenderWindow& window) {
-    m_buttons[Buttons::stop].handleEvent(event, window);
-    if (m_buttons[Buttons::stop].isClicked()) {
+    m_buttons[Buttons::stop]->handleEvent(event, window);
+    if (m_buttons[Buttons::stop]->isClicked()) {
         update();
     }
 }

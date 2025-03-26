@@ -28,12 +28,14 @@ Reel::Reel(std::vector<Symbol>& symbols, const sf::Vector2f& position) :
 }
 
 void Reel::spin(float speed) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_spining = true;
     m_speed = speed;
     m_isDecelerating = false;
 }
 
 void Reel::stop(float decelerationTime) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     if (m_spining && !m_isDecelerating) {
         m_isDecelerating = true;
         m_initialSpeed = m_speed;
@@ -43,6 +45,7 @@ void Reel::stop(float decelerationTime) {
 }
 
 void Reel::update(float deltaTime) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     if (m_spining) {
         if (m_isDecelerating) {
             m_remainingDecelerationTime -= deltaTime;

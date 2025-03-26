@@ -4,16 +4,11 @@
 #include "label.h"
 
 
-class ScoreLabel : public Label {
+class ScoreLabel final : public Label {
 public:
     explicit ScoreLabel(const std::string& text, const sf::Font& font, unsigned int fontSize, const sf::Vector2f& position);
 
     ~ScoreLabel() {}
-
-    ScoreLabel(const ScoreLabel&) = default;
-    ScoreLabel(ScoreLabel&&) noexcept = default;
-    ScoreLabel& operator=(const ScoreLabel&) = default;
-    ScoreLabel& operator=(ScoreLabel&&) noexcept = default;
 
     void draw(sf::RenderWindow& window) const override;
 

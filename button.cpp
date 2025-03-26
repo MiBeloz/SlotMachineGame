@@ -18,29 +18,8 @@ Button::Button(
     setPosition(position);
 }
 
-Button::Button(Button&& other) noexcept :
-    m_shape(std::move(other.m_shape)),
-    m_label(std::move(other.m_label)),
-    m_isClicked(other.m_isClicked),
-    m_enabled(other.m_enabled)
-{
-    other.m_isClicked = false;
-    other.m_enabled = true;
-}
-
-Button& Button::operator=(Button&& other) noexcept {
-    if (this != &other) {
-        m_shape = std::move(other.m_shape);
-        m_label = std::move(other.m_label);
-        m_isClicked = other.m_isClicked;
-        m_enabled = other.m_enabled;
-        other.m_isClicked = false;
-        other.m_enabled = true;
-    }
-    return *this;
-}
-
 void Button::setPosition(const sf::Vector2f& position) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_shape.setPosition(position);
     sf::FloatRect textBounds = m_label.getGlobalBounds();
 
@@ -51,6 +30,7 @@ void Button::setPosition(const sf::Vector2f& position) {
 }
 
 void Button::setEnabled(bool enabled) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_enabled = enabled;
     if (m_enabled) {
         m_shape.setFillColor(LightGray);
@@ -81,11 +61,13 @@ bool Button::isClicked() const {
 }
 
 void Button::reset() {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_isClicked = false;
     m_enabled = true;
 }
 
 void Button::handleEvent(const sf::Event& event, const sf::RenderWindow& window) {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         if (isMouseOver(window) && isEnabled()) {
             m_isClicked = true;

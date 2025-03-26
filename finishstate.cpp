@@ -4,10 +4,10 @@
 
 
 FinishState::FinishState(
-    std::vector<Button>& buttons,
-    std::vector<Reel>& reels,
-    std::vector<Label>& labels,
-    ScoreLabel& scoreLabel,
+    std::vector<std::unique_ptr<Button>>& buttons,
+    std::vector<std::unique_ptr<Reel>>& reels,
+    std::vector<std::unique_ptr<Label>>& labels,
+    std::unique_ptr<ScoreLabel>& scoreLabel,
     const std::function<void()>& nextStateFunction)
     :
     AbstractState(buttons, reels, labels, scoreLabel, nextStateFunction)
@@ -16,7 +16,7 @@ FinishState::FinishState(
 void FinishState::enter() {
     std::thread t([this](){
         for (const auto& reel : std::as_const(m_reels)) {
-            while (reel.isSpining()) {
+            while (reel->isSpining()) {
                 continue;
             }
         }
@@ -28,7 +28,7 @@ void FinishState::enter() {
 void FinishState::update() {
     std::vector<size_t> res;
     for (const auto& reel : std::as_const(m_reels)) {
-        res.push_back(reel.getSymbolId());
+        res.push_back(reel->getSymbolId());
     }
 
     std::vector<size_t> symbolsCount(res.size());
@@ -62,14 +62,14 @@ void FinishState::update() {
             points = -300;
         }
     }
-    m_scoreLabel.addPoints(points);
-    m_labels[Labels::statusBar].setText(std::to_string(points));
+    m_scoreLabel->addPoints(points);
+    m_labels[Labels::statusBar]->setText(std::to_string(points));
 
     if (!win) {
-        m_labels[Labels::win_loss].setText("LOSS :(");
+        m_labels[Labels::win_loss]->setText("LOSS :(");
     }
     else {
-        m_labels[Labels::win_loss].setText("WIN!!!");
+        m_labels[Labels::win_loss]->setText("WIN!!!");
     }
 
     if (m_nextStateFunction) {
@@ -78,6 +78,6 @@ void FinishState::update() {
 }
 
 void FinishState::end() {
-    m_buttons[Buttons::start].reset();
-    m_buttons[Buttons::stop].reset();
+    m_buttons[Buttons::start]->reset();
+    m_buttons[Buttons::stop]->reset();
 }

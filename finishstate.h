@@ -9,10 +9,10 @@
 class FinishState : public AbstractState {
 public:
     explicit FinishState(
-        std::vector<Button>& buttons,
-        std::vector<Reel>& reels,
-        std::vector<Label>& labels,
-        ScoreLabel& scoreLabel,
+        std::vector<std::unique_ptr<Button>>& buttons,
+        std::vector<std::unique_ptr<Reel>>& reels,
+        std::vector<std::unique_ptr<Label>>& labels,
+        std::unique_ptr<ScoreLabel>& scoreLabel,
         const std::function<void()>& nextStateFunction);
 
     void enter() override;

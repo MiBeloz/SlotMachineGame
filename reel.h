@@ -2,6 +2,7 @@
 #define REEL_H
 
 #include <SFML/Graphics.hpp>
+#include <mutex>
 
 #include "symbol.h"
 
@@ -12,10 +13,10 @@ public:
 
     ~Reel() {}
 
-    Reel(const Reel&) = default;
-    Reel(Reel&&) noexcept = default;
-    Reel& operator=(const Reel&) = default;
-    Reel& operator=(Reel&&) noexcept = default;
+    Reel(const Reel&) = delete;
+    Reel(Reel&&) noexcept = delete;
+    Reel& operator=(const Reel&) = delete;
+    Reel& operator=(Reel&&) noexcept = delete;
 
     void spin(float speed = 2000.0f);
 
@@ -43,6 +44,8 @@ private:
     float m_centerY;
 
     size_t m_symbolId;
+
+    std::mutex m_mutex;
 
     void transparencyControl(Symbol& symbol);
 };
