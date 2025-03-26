@@ -28,15 +28,15 @@ public:
 
     void draw(sf::RenderWindow& window) const;
 
-    bool isMouseOver(const sf::RenderWindow& window) const;
+    virtual bool isMouseOver(const sf::RenderWindow& window) const;
 
     bool isClicked() const;
 
     void reset();
 
-    void handleEvent(const sf::Event& event, const sf::RenderWindow& window);
+    virtual void handleEvent(const sf::Event& event, const sf::RenderWindow& window);
 
-private:
+protected:
     sf::RectangleShape m_shape;
     sf::Text m_label;
     bool m_isClicked;
